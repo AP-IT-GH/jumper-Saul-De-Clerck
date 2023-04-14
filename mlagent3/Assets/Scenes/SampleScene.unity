@@ -139,9 +139,10 @@ GameObject:
   - component: {fileID: 352320404}
   - component: {fileID: 352320403}
   - component: {fileID: 352320402}
+  - component: {fileID: 352320409}
   m_Layer: 0
   m_Name: Agent
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -190,8 +191,8 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
-  speedMultiplier: 0.1
+  MaxStep: 1000000
+  jumpForce: 20
 --- !u!114 &352320404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,16 +209,16 @@ MonoBehaviour:
     VectorObservationSize: 3
     NumStackedVectorObservations: 1
     m_ActionSpec:
-      m_NumContinuousActions: 3
-      BranchSizes: 01000000
+      m_NumContinuousActions: 2
+      BranchSizes: 02000000
     VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: 320bd76e5667fd748a4659c3955d8e0b, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
-  m_BehaviorName: JumperAgent
+  m_BehaviorName: JumperAgent2
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
@@ -230,7 +231,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 352320400}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -301,6 +302,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 352320400}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &352320409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352320400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 1000000
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,7 +490,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 2, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -492,8 +509,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96d67730bcf5a0a4c89086995f9f61e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targets:
-  - {fileID: 5007290532086206510, guid: 9de160e81be4735419052f820cc7f160, type: 3}
+  targetPrefab: {fileID: 5007290532086206510, guid: 9de160e81be4735419052f820cc7f160, type: 3}
+  parentTransform: {fileID: 1836746399}
+  spawnInterval: 2
+  destroyXPos: -3
 --- !u!1 &1006270384
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,7 +561,7 @@ GameObject:
   - component: {fileID: 1770168828}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

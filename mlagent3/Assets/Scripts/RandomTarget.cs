@@ -1,42 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class RandomTarget : MonoBehaviour
 {
-	public List<GameObject> targets;
-	private int counter = 0;
-	private Vector3 position = new Vector3(4.5f, 0.8f, 0f);
-	private quaternion rotation = new quaternion(45f, 0f, 0f, 0f);
-	// Start is called before the first frame update
-	void Start()
-	{
+	public GameObject targetPrefab;
+	public Transform parentTransform;
+	public float spawnInterval = 2f;
+	public float destroyXPos = -5f;
+	private float timer = 0f;
 
-	}
-
-	// Update is called once per frame
 	void Update()
 	{
-		counter++;
-		if (counter%100 == 0)
+		timer += Time.deltaTime;
+
+		if (timer >= spawnInterval)
 		{
-			GameObject go;
-			go = Instantiate(targets[UnityEngine.Random.Range(0, targets.Count)]);
-			go.GetComponent<Transform>().position = position;
-			go.transform.parent = GameObject.FindGameObjectWithTag("Object").transform;
-			targets.Add(go);
+			GameObject newTarget = Instantiate(targetPrefab, new Vector3(5, 0.5f, 0f), Quaternion.identity);
+			newTarget.transform.Rotate(new Vector3(90f, 0f, 0f));
+			newTarget.transform.parent = parentTransform;
+			timer = 0f;
 		}
 
-		foreach (var item in targets)
+		foreach (Transform child in parentTransform)
 		{
-			item.GetComponent<Transform>().position -= new Vector3(0.05f, 0, 0);
-
-			//not working?????
-			//if (item.gameObject.transform.position.y < 10)
-			//{
-			//	Destroy(item);
-			//}
+			child.position -= new Vector3(5f, 0f, 0f) * Time.deltaTime; 
+			if (child.position.x < destroyXPos)
+			{
+				Destroy(child.gameObject);
+			}
 		}
 	}
 }

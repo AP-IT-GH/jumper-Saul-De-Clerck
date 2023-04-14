@@ -7,47 +7,75 @@ using Unity.MLAgents.Actuators;
 
 public class JumperAgent : Agent
 {
-	public override void OnEpisodeBegin()
-	{
-		this.transform.localPosition = new Vector3(0, 0.5f, 0);
-		this.transform.localRotation = new Quaternion(0, 0, 0, 0);
-		this.transform.localRotation = Quaternion.identity;
-	}
-	public override void CollectObservations(VectorSensor sensor)
-	{
-		// Target en Agent posities
-		sensor.AddObservation(this.transform.localPosition);
+	public float jumpForce = 0.1f;
+	private Rigidbody rigidbody = null;
+	private bool canJump = true;
 
+	public override void Initialize()
+	{
+		rigidbody = GetComponent<Rigidbody>();
 	}
-	public float speedMultiplier = 0.1f;
+
+	private void FixedUpdate()
+	{
+		if (transform.position.y < 0.5f)
+		{
+			AddReward(-1);
+			ResetGame();
+		}
+	}
+
 	public override void OnActionReceived(ActionBuffers actionBuffers)
 	{
-		// Acties, size = 2
-		Vector3 controlSignal = Vector3.zero;
-		controlSignal.y = actionBuffers.ContinuousActions[0];
-
-		//transform.localPosition += new Vector3(controlSignal.x, jump, controlSignal.z) * Time.deltaTime * speedMultiplier;
-		transform.Translate(controlSignal * speedMultiplier);
-
-		// Van het platform gevallen?
-		if (this.transform.localPosition.y < 0)
-		{
-			SetReward(-0.5f);
-			EndEpisode();
-		}
-
+		if (Mathf.FloorToInt(actionBuffers.DiscreteActions[0]) == 1)
+			Jump();
 	}
+
+	public override void OnEpisodeBegin()
+	{
+		ResetGame();
+	}
+
 	public override void Heuristic(in ActionBuffers actionsOut)
 	{
-		var continuousActionsOut = actionsOut.ContinuousActions;
-		continuousActionsOut[0] = Input.GetAxis("Jump");
+		var actions = actionsOut.DiscreteActions;
+		actions[0] = Input.GetKey(KeyCode.Space) ? 1 : 0;
+	}
+
+	public override void CollectObservations(VectorSensor sensor)
+	{
+		sensor.AddObservation(transform.localPosition);
+	}
+
+	private void Jump()
+	{
+		if (canJump)
+		{
+			AddReward(0.1f);
+			rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+			canJump = false;
+		}
+	}
+
+	public void ResetGame()
+	{
+		gameObject.transform.position = new Vector3(0, 0.5f, 0);
+		foreach (Transform child in GameObject.FindGameObjectWithTag("Object").transform)
+		{
+			Destroy(child.gameObject);
+		}
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.tag == "Obstacle")
+		if (collision.transform.tag == "Floor")
 		{
-			//Destroy(GameObject.FindGameObjectWithTag("Obstacle").transform.GetChild(0).gameObject);
+			AddReward(0.01f);
+			canJump = true;
+		}
+		else if (collision.transform.tag == "Obstacle")
+		{
+			AddReward(-1.0f);
 			EndEpisode();
 		}
 	}
