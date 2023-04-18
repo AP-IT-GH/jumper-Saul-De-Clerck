@@ -215,7 +215,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 320bd76e5667fd748a4659c3955d8e0b, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 7588b382e5f887c43b438f86be987eef, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: JumperAgent2

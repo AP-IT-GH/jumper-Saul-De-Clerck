@@ -18,7 +18,7 @@ public class JumperAgent : Agent
 
 	private void FixedUpdate()
 	{
-		if (transform.position.y < 0.5f)
+		if (transform.position.y < 0f)
 		{
 			AddReward(-1);
 			ResetGame();
